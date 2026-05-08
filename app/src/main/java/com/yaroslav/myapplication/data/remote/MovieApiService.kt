@@ -1,5 +1,6 @@
 package com.yaroslav.myapplication.data.remote
 
+import com.yaroslav.myapplication.data.MovieDetailsDto
 import com.yaroslav.myapplication.data.MovieDto
 import com.yaroslav.myapplication.data.MovieResponse
 import retrofit2.http.GET
@@ -19,5 +20,5 @@ interface MovieApiService {
         @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String = "uk-UA"
-    ): MovieDto
+    ): MovieDetailsDto
 }
