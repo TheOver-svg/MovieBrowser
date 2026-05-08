@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.yaroslav.myapplication.ui.theme.MovieBrowserTheme
 import com.yaroslav.myapplication.view.DetailsScreen
+import com.yaroslav.myapplication.view.FavoritesScreen
 import com.yaroslav.myapplication.view.MainScreen
 
 class MainActivity : ComponentActivity() {
@@ -44,7 +45,6 @@ fun AppNavigation() {
         }
 
         composable("details_screen/{movieId}") { backStackEntry ->
-            // Дістаємо ID з аргументів маршруту
             val movieIdString = backStackEntry.arguments?.getString("movieId")
             val movieId = movieIdString?.toIntOrNull() ?: return@composable
 
@@ -54,8 +54,13 @@ fun AppNavigation() {
             )
         }
 
-        // TODO Екран обраного
         composable("favorites_screen") {
+            FavoritesScreen(
+                onBackClick = { navController.popBackStack() },
+                onMovieClick = { id ->
+                    navController.navigate("details_screen/$id")
+                }
+            )
         }
     }
 }
