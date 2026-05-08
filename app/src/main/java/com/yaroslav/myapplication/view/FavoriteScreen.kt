@@ -75,7 +75,11 @@ fun FavoritesScreen(
                 items(favoriteMovies) { movie ->
                     MovieCard(
                         movie = movie,
-                        onClick = { onMovieClick(movie.id) }
+                        isFavorite = true,
+                        onClick = { onMovieClick(movie.id) },
+                        onFavoriteClick = {
+                            viewModel.toggleFavorite(movie)
+                        }
                     )
                 }
             }
