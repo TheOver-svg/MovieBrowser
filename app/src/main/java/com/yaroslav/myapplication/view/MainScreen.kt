@@ -1,5 +1,6 @@
 package com.yaroslav.myapplication.view
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -29,7 +30,10 @@ val CardBack = Color(0xFF1E1E1E)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(viewModel: MovieViewModel = viewModel(), onFavoritesClick: () -> Unit = {}) {
+fun MainScreen(viewModel: MovieViewModel = viewModel(),
+               onFavoritesClick: () -> Unit = {},
+               onMovieClick: (Int)->Unit = {})
+{
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -68,18 +72,19 @@ fun MainScreen(viewModel: MovieViewModel = viewModel(), onFavoritesClick: () -> 
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(movies) { movie ->
-                MovieCard(movie)
+                MovieCard(movie, onClick = {onMovieClick(movie.id)})
             }
         }
     }
 }
 
 @Composable
-fun MovieCard(movie: Movie) {
+fun MovieCard(movie: Movie, onClick: () -> Unit = {}) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp),
+            .height(200.dp)
+            .clickable {onClick()},
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = CardBack),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
