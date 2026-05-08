@@ -5,6 +5,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -35,6 +37,9 @@ fun DetailsScreen(
     DetailsContent(
         isLoading = viewModel.isLoading,
         details = viewModel.movieDetails,
+        isFavorite = false, // TODO Потрібно взяти статус з бази
+        onFavoriteClick = { //TODO Логіка додавання видалення
+            },
         onBackClick = onBackClick
     )
 }
@@ -44,6 +49,8 @@ fun DetailsScreen(
 fun DetailsContent(
     isLoading: Boolean,
     details: MovieDetails?,
+    isFavorite: Boolean,
+    onFavoriteClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
     Scaffold(
@@ -53,6 +60,17 @@ fun DetailsContent(
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+                    }
+                },
+                actions = {
+                    if (details != null) {
+                        IconButton(onClick = onFavoriteClick) {
+                            Icon(
+                                imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                                contentDescription = "Favorite",
+                                tint = MovieRed
+                            )
+                        }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = DarkBack)
@@ -119,6 +137,8 @@ fun DetailsScreenPreview() {
             releaseDate = "03-10-2008",
             rating = "10.0"
         ),
+        isFavorite = false,
+        onFavoriteClick = {},
         onBackClick = {}
     )
 }
