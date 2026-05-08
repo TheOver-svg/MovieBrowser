@@ -10,6 +10,8 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,6 +36,7 @@ fun MainScreen(viewModel: MovieViewModel = viewModel(),
                onFavoritesClick: () -> Unit = {},
                onMovieClick: (Int)->Unit = {})
 {
+    val favoriteIds by viewModel.favoriteIds.collectAsState()
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -72,14 +75,20 @@ fun MainScreen(viewModel: MovieViewModel = viewModel(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(movies) { movie ->
-                MovieCard(movie, onClick = {onMovieClick(movie.id)})
+                val isFavorite = favoriteIds.contains(movie.id)
+                MovieCard(
+                    movie = movie,
+                    isFavorite = isFavorite, // Передаємо стан
+                    onClick = { onMovieClick(movie.id) },
+                    onFavoriteClick = { viewModel.toggleFavorite(movie) } // Передаємо дію
+                )
             }
         }
     }
 }
 
 @Composable
-fun MovieCard(movie: Movie, onClick: () -> Unit = {}) {
+fun MovieCard(movie: Movie, isFavorite: Boolean, onClick: () -> Unit = {}, onFavoriteClick: () -> Unit = {}) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -125,11 +134,11 @@ fun MovieCard(movie: Movie, onClick: () -> Unit = {}) {
                 }
                 // Кнопка додати в обране
                 IconButton(
-                    onClick = { /* TODO: Додати в базу */ },
+                    onClick = onFavoriteClick,
                     modifier = Modifier.align(Alignment.End)
                 ) {
                     Icon(
-                        imageVector = Icons.Default.FavoriteBorder,
+                        imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                         contentDescription = "Favorite",
                         tint = MovieRed
                     )
