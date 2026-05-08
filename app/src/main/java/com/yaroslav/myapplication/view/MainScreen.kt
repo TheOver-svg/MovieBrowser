@@ -15,10 +15,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.yaroslav.myapplication.data.Movie
+import com.yaroslav.myapplication.viewmodel.MovieViewModel
 
 val DarkBack = Color(0xFF0F0F0F)
 val MovieRed = Color(0xFFE50914)
@@ -27,7 +29,7 @@ val CardBack = Color(0xFF1E1E1E)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(onFavoritesClick: () -> Unit = {}) {
+fun MainScreen(viewModel: MovieViewModel = viewModel(), onFavoritesClick: () -> Unit = {}) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -56,7 +58,7 @@ fun MainScreen(onFavoritesClick: () -> Unit = {}) {
         },
         containerColor = DarkBack
     ) { paddingValues ->
-        val mockMovies = listOf(1, 2, 3, 4, 5)
+        val movies = viewModel.movieList
 
         LazyColumn(
             modifier = Modifier
@@ -65,15 +67,15 @@ fun MainScreen(onFavoritesClick: () -> Unit = {}) {
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(mockMovies) {
-                MovieCard()
+            items(movies) { movie ->
+                MovieCard(movie)
             }
         }
     }
 }
 
 @Composable
-fun MovieCard() {
+fun MovieCard(movie: Movie) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -84,8 +86,8 @@ fun MovieCard() {
     ) {
         Row(modifier = Modifier.fillMaxSize()) {
             AsyncImage(
-                model = "",
-                contentDescription = null,
+                model = movie.posterUrl,
+                contentDescription = movie.title,
                 modifier = Modifier
                     .width(130.dp)
                     .fillMaxHeight(),
@@ -100,7 +102,7 @@ fun MovieCard() {
             ) {
                 Column {
                     Text(
-                        text = "Назва фільму",
+                        text = movie.title,
                         color = Color.White,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
@@ -109,7 +111,7 @@ fun MovieCard() {
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "Overview description",
+                        text = movie.overview,
                         color = Color.LightGray,
                         fontSize = 14.sp,
                         maxLines = 3,
@@ -132,8 +134,8 @@ fun MovieCard() {
     }
 }
 
-@Preview(showSystemUi = true)
-@Composable
-fun MainScreenPreview() {
-    MainScreen()
-}
+//@Preview(showSystemUi = true)
+//@Composable
+//fun MainScreenPreview() {
+//    MainScreen()
+//}
