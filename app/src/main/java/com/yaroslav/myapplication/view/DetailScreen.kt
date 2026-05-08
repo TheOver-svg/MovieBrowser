@@ -32,14 +32,14 @@ fun DetailsScreen(
 ) {
     LaunchedEffect(movieId) {
         viewModel.loadMovie(movieId)
+        viewModel.checkFavoriteStatus(movieId)
     }
 
     DetailsContent(
         isLoading = viewModel.isLoading,
         details = viewModel.movieDetails,
-        isFavorite = false, // TODO Потрібно взяти статус з бази
-        onFavoriteClick = { //TODO Логіка додавання видалення
-            },
+        isFavorite = viewModel.isFavorite,
+        onFavoriteClick = { viewModel.toggleFavorite(movieId) },
         onBackClick = onBackClick
     )
 }
